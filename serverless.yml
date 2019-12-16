@@ -1,0 +1,114 @@
+# Welcome to Serverless!
+#
+# Author: Romain Spinelli
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: aws-microsoft-shifts-explorer
+# app and org for use with dashboard.serverless.com
+app: aws-microsoft-shifts-explorer
+org: rom1spi
+
+plugins:
+  # https://serverless.com/plugins/serverless-pseudo-parameters/
+  - serverless-pseudo-parameters
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+# frameworkVersion: "=X.X.X"
+
+custom:
+    defaultRegion: eu-west-3
+    defaultStage: dev
+    notifierTopicName: ${self:service}-notifier-${self:provider.stage}
+    notifierTopicArn: { "Fn::Join" : ["", ["arn:aws:sns:${self:provider.region}:", { "Ref" : "AWS::AccountId" }, ":${self:custom.notifierTopicName}" ] ]  }
+
+provider:
+  name: aws
+  runtime: python3.8
+  memorySize: 128 
+
+# you can overwrite defaults here
+  stage: ${opt:stage, self:custom.defaultStage}
+  region: ${opt:region, self:custom.defaultRegion}
+
+# you can add statements to the Lambda function's IAM Role here
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action: "SNS:Publish"
+      Resource:
+        Ref: SNSNotifier
+    - Effect: "Allow"
+      Action: 
+          - "xray:PutTraceSegments"
+          - "xray:PutTelemetryRecords"
+      Resource: "*"
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:PutObject"
+#      Resource:
+#        Fn::Join:
+#          - ""
+#          - - "arn:aws:s3:::"
+#            - "Ref" : "ServerlessDeploymentBucket"
+#            - "/*"
+
+# you can define service wide environment variables here
+#  environment:
+#    variable1: value1
+
+# you can add packaging information here
+#package:
+#  include:
+#    - include-me.py
+#    - include-me-dir/**
+#  exclude:
+#    - exclude-me.py
+#    - exclude-me-dir/**
+
+functions:
+  getShiftsUsersForPeriod:
+    handler: shiftsExplorer.getShiftsUsersForPeriod
+    layers:
+      - { "Fn::Join" : ["", ["arn:aws:lambda:${self:provider.region}:", "770693421928:layer:Klayers-python38-requests:1" ] ]  }
+    environment:
+      NOTIFIER_TOPIC_ARN: ${self:custom.notifierTopicArn}
+    # events:
+    #   - http:
+    #       path: shiftsusers/period
+    #       method: get
+    #       cors: true
+          
+  getShiftsUsersForNextWeekDay:
+    handler: shiftsExplorer.getShiftsUsersForNextWeekDay
+    layers:
+      - { "Fn::Join" : ["", ["arn:aws:lambda:${self:provider.region}:", "770693421928:layer:Klayers-python38-requests:1" ] ]  }
+    environment:
+      NOTIFIER_TOPIC_ARN: ${self:custom.notifierTopicArn}
+    # events:
+    #   - http:
+    #       path: shiftsusers/weekday/{id}
+    #       method: get
+    #       cors: true
+
+# you can add CloudFormation resource templates here
+resources:
+  Resources:
+    SNSNotifier:
+      Type: AWS::SNS::Topic
+      Properties: 
+        DisplayName: "[${self:service}] News from ${self:provider.region}"
+        TopicName: ${self:custom.notifierTopicName}
+    # LambdaLayerPermission:
+    #   Type: 'AWS::Lambda::LayerVersionPermission'
+    #   Properties:
+    #     Action: lambda:GetLayerVersion
+    #     LayerVersionArn: { "Fn::Join" : ["", ["arn:aws:lambda:${self:provider.region}:", "770693421928:layer:Klayers-python38-requests:1" ] ]  }
+    #     Principal: !Ref AWS::AccountId
+#  Outputs:
+#     NewOutput:
+#       Description: "Description for the output"
+#       Value: "Some output value"
