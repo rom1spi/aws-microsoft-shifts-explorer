@@ -59,24 +59,26 @@ def getShiftsUsersForPeriod(event, context):
             }
             shifts_users_list.append(shift_user)
 
-    email_list=[]
+    userdata_list=[]
     start_time = time.time()
     for user_shift in shifts_users_list:
         user_details=getUserById(g_microsoft_graph_api_token, user_shift["userId"])
         #print(json.dumps(user))
         userdata=json.loads(user_details)
-        email_list.append([userdata["mail"],userdata["displayName"],user_shift["shiftName"],user_shift["startDateTime"],user_shift["endDateTime"]])
+        userdata_json={
+            "email": userdata["mail"],
+            "displayName": userdata["displayName"],
+            "shiftName": user_shift["shiftName"],
+            "startDateTime": user_shift["startDateTime"],
+            "endDateTime": user_shift["endDateTime"]
+        }
+        userdata_list.append(userdata_json)
         #print(json.dumps(email_list))
 
     #print("--- loop2: %s seconds ---" % (time.time() - start_time))
-    print(json.dumps(email_list))
+    print(json.dumps(userdata_list))
 
-    body = {
-        "input": event,
-        "message": email_list
-    }
-
-    return manageResponse(200,json.dumps(body), False)
+    return manageResponse(200,userdata_list, False)
 
 """
     {
