@@ -10,6 +10,12 @@ You want to get all users contact information for all shifts filtered by:
 or
 - the next given week day
 
+## Architecture
+
+This module is fully serverless.
+
+![](res/AWS_Microsoft_Shifts_Explorer.png)
+
 ## Sample Request:
 
 ### getShiftsUsersForPeriod
