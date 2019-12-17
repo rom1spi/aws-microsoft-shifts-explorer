@@ -1,6 +1,6 @@
 import notifier
 
-def manageReponse(statusCode, message, notify=True):
+def manageResponse(statusCode, message, notify=True):
     response = {
         "statusCode": statusCode,
         "body": message

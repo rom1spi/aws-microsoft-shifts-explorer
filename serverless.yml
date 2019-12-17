@@ -43,18 +43,14 @@ provider:
         Ref: SNSNotifier
     - Effect: "Allow"
       Action: 
-          - "xray:PutTraceSegments"
-          - "xray:PutTelemetryRecords"
+        - "xray:PutTraceSegments"
+        - "xray:PutTelemetryRecords"
       Resource: "*"
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:PutObject"
-#      Resource:
-#        Fn::Join:
-#          - ""
-#          - - "arn:aws:s3:::"
-#            - "Ref" : "ServerlessDeploymentBucket"
-#            - "/*"
+    - Effect: "Allow"
+      Action:
+        - "secretsmanager:GetSecretValue"
+        - "kms:Decrypt"
+      Resource: "*"
 
 # you can define service wide environment variables here
 #  environment:
@@ -76,6 +72,7 @@ functions:
       - { "Fn::Join" : ["", ["arn:aws:lambda:${self:provider.region}:", "770693421928:layer:Klayers-python38-requests:1" ] ]  }
     environment:
       NOTIFIER_TOPIC_ARN: ${self:custom.notifierTopicArn}
+      STAGE: ${self:provider.stage}
     # events:
     #   - http:
     #       path: shiftsusers/period
@@ -88,6 +85,7 @@ functions:
       - { "Fn::Join" : ["", ["arn:aws:lambda:${self:provider.region}:", "770693421928:layer:Klayers-python38-requests:1" ] ]  }
     environment:
       NOTIFIER_TOPIC_ARN: ${self:custom.notifierTopicArn}
+      STAGE: ${self:provider.stage}
     # events:
     #   - http:
     #       path: shiftsusers/weekday/{id}

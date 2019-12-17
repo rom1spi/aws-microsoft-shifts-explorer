@@ -5,18 +5,17 @@
 import boto3
 import base64
 from botocore.exceptions import ClientError
+import os
 
+_SECRET_STORE_IDENTIFIER = "Microsoft/Graph/API/ShiftsExplorer/" + os.environ['STAGE']
 
 def get_secret():
-
-    secret_name = "Easyteam/Microsoft/AD"
-    region_name = "eu-west-2"
 
     # Create a Secrets Manager client
     session = boto3.session.Session()
     client = session.client(
         service_name='secretsmanager',
-        region_name=region_name
+        region_name=session.region_name
     )
 
     # In this sample we only handle the specific exceptions for the 'GetSecretValue' API.
@@ -25,7 +24,7 @@ def get_secret():
 
     try:
         get_secret_value_response = client.get_secret_value(
-            SecretId=secret_name
+            SecretId=_SECRET_STORE_IDENTIFIER
         )
     except ClientError as e:
         if e.response['Error']['Code'] == 'DecryptionFailureException':
@@ -55,5 +54,3 @@ def get_secret():
             return get_secret_value_response['SecretString']
         else:
             return base64.b64decode(get_secret_value_response['SecretBinary'])
-            
-    return None
