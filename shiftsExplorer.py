@@ -16,15 +16,7 @@ g_shift_name_pattern=None
 g_microsoft_graph_api_token=None
 
 """
-    {
-        "filters": {
-            "sharedShiftPeriod": {
-                "startDateTime": "2019-12-17T00:00:00.000Z",
-                "endDateTime": "2019-12-18T00:00:00.000Z"
-            },
-            "shiftNamePattern": "(?i)astreinte"
-        }
-    }
+    Returns users shifts planned over a period
 """
 def getShiftsUsersForPeriod(event, context):
     getTokenResponse = getToken()
@@ -81,12 +73,7 @@ def getShiftsUsersForPeriod(event, context):
     return manageResponse(200,userdata_list, False)
 
 """
-    {
-        "filters": {
-            "nextWeekday": "TUE",
-            "shiftNamePattern": "(?i)astreinte"
-        }
-    }
+    Returns users shifts planned on the next given week day
 """
 def getShiftsUsersForNextWeekDay(event, context):
     weekday=getWeekDayNum(str(event["filters"]["nextWeekday"]))
