@@ -95,6 +95,38 @@ If you don't specify the `stage` and/or the `region`, il will use the values in 
     defaultRegion: eu-west-3
     defaultStage: dev
  ```
+## Credentials
+
+You have to store your Microsoft account credentials in a secure way:
+1. Connect to the AWS Console: https://aws.amazon.com/fr/console/
+2. Select the region you want to deploy the service
+3. Go to Secrets Manager service
+4. Click on "Store new secret" button
+5. Select "Other type of secrets"
+6. Click on "Plaintext" tab
+7. Copy/paste the following code block in the "plan text" tab, and replace the attributes' values between `<>`:
+ 
+```json
+{
+  "USERNAME": "<username>",
+  "PASSWORD": "<password>",
+  "TENANT_ID": "<tenant_id>",
+  "TEAM_ID": "<team_id>",
+  "SECRET_KEY": "<secret_key>",
+  "CLIENT_ID": "<client_id>"
+}
+```
+
+If you don't know how to valorize these attributes, connect to the Azure portal to find your own attributes:
+https://portal.azure.com/
+
+8. Enter the Secret name: `Microsoft/Graph/API/ShiftsExplorer/<STAGE>`
+ 
+ Replace `<STAGE>` with the value of your stage (used to deploy your application)
+ Examples: 
+  * `Microsoft/Graph/API/ShiftsExplorer/dev`
+  * `Microsoft/Graph/API/ShiftsExplorer/test`
+  * `Microsoft/Graph/API/ShiftsExplorer/prod`
 
 ## Notifications
 
