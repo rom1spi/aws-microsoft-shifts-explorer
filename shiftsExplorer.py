@@ -30,6 +30,9 @@ def getShiftsUsersForPeriod(event, context):
     g_microsoft_graph_api_token=token["access_token"]
 
     shifts_response=json.loads(getShifts(g_microsoft_graph_api_token,event))
+    if "error" in shifts_response:
+        print(json.dumps(shifts_response))
+        return manageResponse(407,json.dumps(shifts_response))
     shifts=shifts_response["value"]
 
     # get the pattern to filter on shifts names

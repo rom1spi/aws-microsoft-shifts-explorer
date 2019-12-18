@@ -126,6 +126,10 @@ You have to store your Microsoft account credentials in a secure way:
 If you don't know how to valorize these attributes, connect to the Azure portal to find your own attributes:
 https://portal.azure.com/
 
+**Important**: 
+- The user must belong to the team
+- Advise: create a generic user in your Azure AD (without licence on Office products), and give it access to the tenant (TENANT_ID), and add it to the team (TEAM_ID)
+
 8. Enter the Secret name: `Microsoft/Graph/API/ShiftsExplorer/<STAGE>`
  
  Replace `<STAGE>` with the value of your stage (used to deploy your application)
