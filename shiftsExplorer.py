@@ -22,14 +22,15 @@ def getShiftsUsersForPeriod(event, context):
     getTokenResponse = getToken()
     if getTokenResponse is None:
         return manageResponse(407, "Unable to get credentials in AWS Secrets Manager")
+    elif "error" in getTokenResponse:
+        print(getTokenResponse)
+        return manageResponse(407,getTokenResponse)
     token=json.loads(getTokenResponse)
     global g_microsoft_graph_api_token
     g_microsoft_graph_api_token=token["access_token"]
 
     shifts_response=json.loads(getShifts(g_microsoft_graph_api_token,event))
-    #print(json.dumps(shifts_response))
     shifts=shifts_response["value"]
-    #print(json.dumps(shifts))
 
     # get the pattern to filter on shifts names
     regex="."
@@ -67,7 +68,6 @@ def getShiftsUsersForPeriod(event, context):
         userdata_list.append(userdata_json)
         #print(json.dumps(email_list))
 
-    #print("--- loop2: %s seconds ---" % (time.time() - start_time))
     print(json.dumps(userdata_list))
 
     return manageResponse(200,userdata_list, False)
@@ -135,7 +135,6 @@ def getUserById(token, userId):
         }
 
     response = requests.request("GET", url, headers=headers)
-
     return response.text
 
 def getToken():    
@@ -164,7 +163,6 @@ def getToken():
         }
 
     response = requests.request("POST", url, data=payload, headers=headers)
-
     return response.text
 
 def next_weekday(d, weekday):

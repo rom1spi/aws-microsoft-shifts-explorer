@@ -30,6 +30,7 @@ provider:
   name: aws
   runtime: python3.8
   memorySize: 128 
+  timeout: 15
 
 # you can overwrite defaults here
   stage: ${opt:stage, self:custom.defaultStage}
