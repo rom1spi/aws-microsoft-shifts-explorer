@@ -127,6 +127,7 @@ If you don't know how to valorize these attributes, connect to the Azure portal 
 https://portal.azure.com/
 
 **Important**: 
+- The username must be like: `<username>@<yourdomain>.<ext>` (not just `username`)
 - The user must belong to the team
 - Advise: create a generic user in your Azure AD (without licence on Office products), and give it access to the tenant (TENANT_ID), and add it to the team (TEAM_ID)
 
