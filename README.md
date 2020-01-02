@@ -92,6 +92,7 @@ Possible values for `nextWeekday`:
    ```
 5. Open a terminal on your local project directory:
 `
+$ npm install serverless-pseudo-parameters
 $ sls deploy [--stage dev] [--region eu-west-1]
 `
 
