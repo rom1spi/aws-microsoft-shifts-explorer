@@ -10,7 +10,7 @@
 service: aws-microsoft-shifts-explorer
 # app and org for use with dashboard.serverless.com
 app: aws-microsoft-shifts-explorer
-org: rom1spi
+org: <YOUR_ORG>
 
 plugins:
   # https://serverless.com/plugins/serverless-pseudo-parameters/
