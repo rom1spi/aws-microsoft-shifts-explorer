@@ -91,7 +91,7 @@ provider:
 
 functions:
   getShiftsUsersForPeriod:
-    handler: shiftsExplorer.apiGetShiftsUsersForPeriod
+    handler: src/shiftsExplorer.apiGetShiftsUsersForPeriod
     layers:
       - { "Fn::Join" : ["", ["arn:aws:lambda:${self:provider.region}:", "770693421928:layer:Klayers-python38-requests:1" ] ]  }
     environment:
@@ -105,7 +105,7 @@ functions:
           private: true
           
   getShiftsUsersForNextWeekDay:
-    handler: shiftsExplorer.apiGetShiftsUsersForNextWeekDay
+    handler: src/shiftsExplorer.apiGetShiftsUsersForNextWeekDay
     layers:
       - { "Fn::Join" : ["", ["arn:aws:lambda:${self:provider.region}:", "770693421928:layer:Klayers-python38-requests:1" ] ]  }
     environment:
