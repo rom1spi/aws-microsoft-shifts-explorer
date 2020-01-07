@@ -18,7 +18,7 @@ This module is fully serverless.
 
 ## Sample Request:
 
-### getShiftsUsersForPeriod
+### /shiftsusers/period
 ```json
 {
     "filters": {
@@ -31,7 +31,7 @@ This module is fully serverless.
 }
 ```
 
-### getShiftsUsersForNextWeekDay
+### /shiftsusers/weekday
 ```json
 {
     "filters": {
