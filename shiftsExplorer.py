@@ -18,7 +18,7 @@ g_microsoft_graph_api_token=None
 """
     Returns users shifts planned over a period
 """
-def getShiftsUsersForPeriod(event, context):
+def getShiftsUsersForPeriod(body):    
     getTokenResponse = getToken()
     if getTokenResponse is None:
         return manageResponse(407, "Unable to get credentials in AWS Secrets Manager")
@@ -28,8 +28,8 @@ def getShiftsUsersForPeriod(event, context):
     token=json.loads(getTokenResponse)
     global g_microsoft_graph_api_token
     g_microsoft_graph_api_token=token["access_token"]
-
-    shifts_response=json.loads(getShifts(g_microsoft_graph_api_token,event))
+    
+    shifts_response=json.loads(getShifts(g_microsoft_graph_api_token,body))
     if "error" in shifts_response:
         print(json.dumps(shifts_response))
         return manageResponse(407,json.dumps(shifts_response))
@@ -38,7 +38,7 @@ def getShiftsUsersForPeriod(event, context):
     # get the pattern to filter on shifts names
     regex="."
     global g_shift_name_pattern
-    g_shift_name_pattern=event["filters"]["shiftNamePattern"]
+    g_shift_name_pattern=body["filters"]["shiftNamePattern"]
     if g_shift_name_pattern:
         regex=g_shift_name_pattern
     pattern = re.compile(regex)
@@ -76,10 +76,23 @@ def getShiftsUsersForPeriod(event, context):
     return manageResponse(200,userdata_list, False)
 
 """
+    Returns users shifts planned over a period
+"""
+def apiGetShiftsUsersForPeriod(event, context):  
+    if "body" in event:
+        body=json.loads(event["body"])
+        return getShiftsUsersForPeriod(body)
+    return getShiftsUsersForPeriod(event)
+
+"""
     Returns users shifts planned on the next given week day
 """
-def getShiftsUsersForNextWeekDay(event, context):
-    weekday=getWeekDayNum(str(event["filters"]["nextWeekday"]))
+def apiGetShiftsUsersForNextWeekDay(event, context):
+    print(json.dumps(event))
+    body=event
+    if "body" in event:
+        body=json.loads(event["body"])
+    weekday=getWeekDayNum(str(body["filters"]["nextWeekday"]))
     now = datetime.datetime.now()
     d = datetime.date(now.year, now.month, now.day)
     next_period_fullday = next_weekday(d, weekday) # 0 = Monday, 1=Tuesday, 2=Wednesday...
@@ -91,11 +104,11 @@ def getShiftsUsersForNextWeekDay(event, context):
                 "startDateTime": str(next_period_fullday) + _DEFAULT_TIME,
                 "endDateTime": str(nextday) + _DEFAULT_TIME
             },
-            "shiftNamePattern": event["filters"]["shiftNamePattern"]
+            "shiftNamePattern": body["filters"]["shiftNamePattern"]
         }
     }
 
-    return getShiftsUsersForPeriod(input, context)
+    return getShiftsUsersForPeriod(input)
 
 def getShifts(token,event):
     url = "https://graph.microsoft.com/" + _MICROSOFT_GRAPH_API_VERSION + "/teams/"+g_team_id+"/schedule/shifts"

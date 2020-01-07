@@ -32,9 +32,32 @@ provider:
   memorySize: 128 
   timeout: 15
 
+  usagePlan:
+    quota:
+      limit: 1000
+      offset: 2
+      period: MONTH
+    throttle:
+      burstLimit: 200
+      rateLimit: 100
+
+  endpointType: regional # Optional endpoint configuration for API Gateway REST API. Default is Edge.
+  apiKeys:
+    - name: shiftsApiKeys
+      value: ${opt:myApiKey}
+
 # you can overwrite defaults here
   stage: ${opt:stage, self:custom.defaultStage}
   region: ${opt:region, self:custom.defaultRegion}
+
+  # resourcePolicy:
+  #   - Effect: Allow
+  #     Principal:
+  #       AWS:
+  #         - arn:aws:iam::059887072196:user/ServerlessFramework
+  #     Action: execute-api:Invoke
+  #     Resource:
+  #       - execute-api:/*/*/*
 
 # you can add statements to the Lambda function's IAM Role here
   iamRoleStatements:
@@ -68,30 +91,32 @@ provider:
 
 functions:
   getShiftsUsersForPeriod:
-    handler: shiftsExplorer.getShiftsUsersForPeriod
+    handler: shiftsExplorer.apiGetShiftsUsersForPeriod
     layers:
       - { "Fn::Join" : ["", ["arn:aws:lambda:${self:provider.region}:", "770693421928:layer:Klayers-python38-requests:1" ] ]  }
     environment:
       NOTIFIER_TOPIC_ARN: ${self:custom.notifierTopicArn}
       STAGE: ${self:provider.stage}
-    # events:
-    #   - http:
-    #       path: shiftsusers/period
-    #       method: get
-    #       cors: true
+    events:
+      - http:
+          path: shiftsusers/period
+          method: POST
+          cors: true
+          private: true
           
   getShiftsUsersForNextWeekDay:
-    handler: shiftsExplorer.getShiftsUsersForNextWeekDay
+    handler: shiftsExplorer.apiGetShiftsUsersForNextWeekDay
     layers:
       - { "Fn::Join" : ["", ["arn:aws:lambda:${self:provider.region}:", "770693421928:layer:Klayers-python38-requests:1" ] ]  }
     environment:
       NOTIFIER_TOPIC_ARN: ${self:custom.notifierTopicArn}
       STAGE: ${self:provider.stage}
-    # events:
-    #   - http:
-    #       path: shiftsusers/weekday/{id}
-    #       method: get
-    #       cors: true
+    events:
+      - http:
+          path: shiftsusers/weekday
+          method: POST
+          cors: true
+          private: true
 
 # you can add CloudFormation resource templates here
 resources:

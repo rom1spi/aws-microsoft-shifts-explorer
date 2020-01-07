@@ -93,8 +93,15 @@ Possible values for `nextWeekday`:
 5. Open a terminal on your local project directory:
 `
 $ npm install serverless-pseudo-parameters
-$ sls deploy [--stage dev] [--region eu-west-1]
+$ sls deploy [--stage dev] [--region eu-west-1] --myApiKey `<YOUR_API_KEY_VALUE>`
 `
+
+The value you specified in `<YOUR_API_KEY_VALUE>` must then be used in the headers `x-api-key` of your API call.
+
+In your terminal, your deployment might display something like:
+![](res/deploy.png)
+
+Besides you can see that the 2 endpoints are listed in the "Service Information" part.
 
 If you don't specify the `stage` and/or the `region`, il will use the values in the `custom` part of the `serverless.yml`:
  ```json
