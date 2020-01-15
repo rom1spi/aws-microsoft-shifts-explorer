@@ -12,7 +12,7 @@ _DEFAULT_TIME="T00:00:00.000Z"
 g_team_id=None
 g_start_datetime=None
 g_end_datetime=None
-g_shift_name_pattern=None
+g_shift_name_contains=None
 g_microsoft_graph_api_token=None
 
 """
@@ -36,17 +36,13 @@ def getShiftsUsersForPeriod(body):
     shifts=shifts_response["value"]
 
     # get the pattern to filter on shifts names
-    regex="."
-    global g_shift_name_pattern
-    g_shift_name_pattern=body["filters"]["shiftNamePattern"]
-    if g_shift_name_pattern:
-        regex=g_shift_name_pattern
-    pattern = re.compile(regex)
+    global g_shift_name_contains
+    g_shift_name_contains=body["filters"]["shiftNameContains"]
 
     shifts_users_list=[]
     for shift in shifts:
-        match=pattern.match(str(shift["sharedShift"]["displayName"]))
-        if match != None and shift["userId"] not in shifts_users_list:
+        match=stringContains(str(shift["sharedShift"]["displayName"]), g_shift_name_contains)
+        if match == True or not g_shift_name_contains:
             shift_user={
                 "userId": shift["userId"],
                 "shiftName": shift["sharedShift"]["displayName"],
@@ -105,7 +101,7 @@ def apiGetShiftsUsersForNextWeekDay(event, context):
                 "startDateTime": str(next_period_fullday) + _DEFAULT_TIME,
                 "endDateTime": str(nextday) + _DEFAULT_TIME
             },
-            "shiftNamePattern": body["filters"]["shiftNamePattern"]
+            "shiftNameContains": body["filters"]["shiftNameContains"]
         }
     }
 
@@ -205,3 +201,15 @@ def getWeekDayNum(x):
         'SAT': 5,
         'SUN': 6
     }.get(x, 0) 
+
+# returns True if string contains at least one word in wordsList
+def stringContains(string, wordsList):
+    if wordsList:
+        for word in wordsList:
+            regex="(?i)"+word
+            pattern = re.compile(regex)
+            match=pattern.match(string)
+            if match:
+                return True
+    
+    return False

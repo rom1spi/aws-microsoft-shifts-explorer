@@ -26,7 +26,7 @@ This module is fully serverless.
             "startDateTime": "2019-12-17T00:00:00.000Z",
             "endDateTime": "2019-12-18T00:00:00.000Z"
         },
-        "shiftNamePattern": "(?i)duty"
+        "shiftNameContains": ["duty", "show"]
     }
 }
 ```
@@ -36,13 +36,16 @@ This module is fully serverless.
 {
     "filters": {
         "nextWeekday": "TUE",
-        "shiftNamePattern": "(?i)duty"
+        "shiftNameContains": ["duty", "show"]
     }
 }
 ```
 
 Possible values for `nextWeekday`: 
 `MONDAY`, `TUESDAY`, `WEDNESDAY`, `THURSDAY`, `FRIDAY`, `SATURDAY`, `SUNDAY`, `MON`, `TUE`, `WED`, `THU`, `FRI`, `SAT`, `SUN`
+
+The `shiftNameContains` field contains a list of words which shift name must contain (at least one of them).
+If you leave it empty (`"shiftNameContains": []`), all shifts will be returned.
 
 ## Sample Response:
 ```json
@@ -69,7 +72,7 @@ Possible values for `nextWeekday`:
       "email": "tyrion.lannister@got.com",
       "mobilePhone": "+354 123 45 67",
       "displayName": "Tyrion Lannister",
-      "shiftName": "L3 Duty",
+      "shiftName": "TV show",
       "startDateTime": "2019-12-24T08:00:00Z",
       "endDateTime": "2019-12-24T17:00:00Z"
     },
@@ -77,7 +80,7 @@ Possible values for `nextWeekday`:
       "email": "freddie.mercury@queen.uk",
       "mobilePhone": "+44 12 34 56 7890",
       "displayName": "Freddie Mercury",
-      "shiftName": "MGR Duty",
+      "shiftName": "TV show",
       "startDateTime": "2019-12-24T08:00:00Z",
       "endDateTime": "2019-12-24T17:00:00Z"
     }
