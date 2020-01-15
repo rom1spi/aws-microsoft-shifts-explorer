@@ -63,6 +63,7 @@ def getShiftsUsersForPeriod(body):
         userdata=json.loads(user_details)
         userdata_json={
             "email": userdata["mail"],
+            "mobilePhone": userdata["mobilePhone"],
             "displayName": userdata["displayName"],
             "shiftName": user_shift["shiftName"],
             "startDateTime": user_shift["startDateTime"],

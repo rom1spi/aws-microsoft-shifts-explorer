@@ -51,6 +51,7 @@ Possible values for `nextWeekday`:
   "body": [
     {
       "email": "romain.spinelli@foo.bar",
+      "mobilePhone": "+33 0 12 34 56 78",
       "displayName": "Romain Spinelli",
       "shiftName": "Cloud Duty",
       "startDateTime": "2019-12-24T08:00:00Z",
@@ -58,6 +59,7 @@ Possible values for `nextWeekday`:
     },
     {
       "email": "john.smith@foo.bar",
+      "mobilePhone": "+41 12 345 67 89",
       "displayName": "John Smith",
       "shiftName": "L2 Duty",
       "startDateTime": "2019-12-24T08:00:00Z",
@@ -65,6 +67,7 @@ Possible values for `nextWeekday`:
     },
     {
       "email": "tyrion.lannister@got.com",
+      "mobilePhone": "+354 123 45 67",
       "displayName": "Tyrion Lannister",
       "shiftName": "L3 Duty",
       "startDateTime": "2019-12-24T08:00:00Z",
@@ -72,6 +75,7 @@ Possible values for `nextWeekday`:
     },
     {
       "email": "freddie.mercury@queen.uk",
+      "mobilePhone": "+44 12 34 56 7890",
       "displayName": "Freddie Mercury",
       "shiftName": "MGR Duty",
       "startDateTime": "2019-12-24T08:00:00Z",
